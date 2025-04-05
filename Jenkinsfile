@@ -26,7 +26,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                dir{"ideasoftwares"}{
+                dir("ideasoftwares"){
                     bat 'npm install'
                 }
               
@@ -35,7 +35,7 @@ pipeline {
 
         stage('Build React App') {
             steps {
-                dir{"ideasoftwares"}{
+                di("ideasoftwares"){
                     bat 'npm run build'
                 }
                 
