@@ -4,7 +4,7 @@ pipeline {
     environment {
         AZURE_CREDENTIALS_ID = 'react-jenkins-principle'
         RESOURCE_GROUP = 'rg-jenkins'
-        APP_SERVICE_NAME = 'webapiyashpjenkins82648' // Replace with your app name
+        APP_SERVICE_NAME = 'webapiyashpjenkins82648'
     }
 
     stages {
@@ -26,7 +26,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                dir("ikeasoftwares") {
+                dir('ikeasoftwares') {
                     bat 'npm install'
                 }
             }
@@ -34,9 +34,15 @@ pipeline {
 
         stage('Build React App') {
             steps {
-                dir("ikeasoftwares") {
+                dir('ikeasoftwares') {
                     bat 'npm run build'
                 }
+            }
+        }
+
+        stage('Prepare Build Zip') {
+            steps {
+                bat '''powershell -Command "Compress-Archive -Path ikeasoftwares\\build\\* -DestinationPath build.zip -Force"'''
             }
         }
 
@@ -44,11 +50,6 @@ pipeline {
             steps {
                 withCredentials([azureServicePrincipal(credentialsId: AZURE_CREDENTIALS_ID)]) {
                     bat "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID"
-                    bat '''
-                    cd ikeasoftwares\\build
-                    powershell -Command "Compress-Archive -Path * -DestinationPath ../../build.zip -Force"
-                    cd ../..
-                    '''
                     bat "az webapp deployment source config-zip --resource-group $RESOURCE_GROUP --name $APP_SERVICE_NAME --src build.zip"
                 }
             }
@@ -64,5 +65,6 @@ pipeline {
         }
     }
 }
+
 
 
