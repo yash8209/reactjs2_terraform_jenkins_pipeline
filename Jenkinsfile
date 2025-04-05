@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/yash8209/reactjs_cicd_pipeline_jenkins.git'
+                git branch: 'main', url: 'https://github.com/yash8209/reactjs2_terraform_jenkins_pipeline.git'
             }
         }
 
