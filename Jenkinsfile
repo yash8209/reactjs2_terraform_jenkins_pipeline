@@ -26,19 +26,17 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                dir("ideasoftwares"){
+                dir("ikeasoftwares") {
                     bat 'npm install'
                 }
-              
             }
         }
 
         stage('Build React App') {
             steps {
-                di("ideasoftwares"){
+                dir("ikeasoftwares") {
                     bat 'npm run build'
                 }
-                
             }
         }
 
@@ -46,8 +44,8 @@ pipeline {
             steps {
                 withCredentials([azureServicePrincipal(credentialsId: AZURE_CREDENTIALS_ID)]) {
                     bat "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID"
-                    bat "powershell Compress-Archive -Path build/* -DestinationPath build.zip -Force"
-                    bat "az webapp deploy --resource-group $RESOURCE_GROUP --name $APP_SERVICE_NAME --src-path build.zip --type zip"
+                    bat "powershell Compress-Archive -Path ikeasoftwares\\build\\* -DestinationPath ikeasoftwares\\build.zip -Force"
+                    bat "az webapp deploy --resource-group $RESOURCE_GROUP --name $APP_SERVICE_NAME --src-path ikeasoftwares\\build.zip --type zip"
                 }
             }
         }
@@ -62,3 +60,4 @@ pipeline {
         }
     }
 }
+
